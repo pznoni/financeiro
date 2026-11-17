@@ -3,7 +3,7 @@ import { deleteRecurring, generateRecurring, loadAll, saveRecurring } from '../f
 import { state } from '../state.js';
 import { centsToInput, escapeHTML, formatBRL, parseMoney, sum, uid, currentMonth } from '../util.js';
 import {
-  $, catIcon, categoryOptions, choiceDialog, emptyState, icons, openSheet, originOptions,
+  $, categoryOptions, choiceDialog, emptyState, icons, openSheet, originOptions,
   parseOrigin, showError, toast,
 } from './components.js';
 
@@ -50,7 +50,6 @@ function group(title, list, d) {
         return `
           <li class="tx${r.ativo ? '' : ' is-paused'}">
             <button type="button" class="tx-main" data-rec="${escapeHTML(r.id)}">
-              ${catIcon(cat)}
               <span class="tx-text">
                 <span class="tx-desc">${escapeHTML(r.descricao)}</span>
                 <span class="tx-meta">${meta.map(escapeHTML).join(' · ')}</span>

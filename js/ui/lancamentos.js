@@ -38,7 +38,7 @@ export async function render(root) {
         <span class="visually-hidden">Filtrar por categoria</span>
         <select data-filter-cat>
           <option value="">Todas as categorias</option>
-          ${d.categories.map((c) => `<option value="${escapeHTML(c.id)}"${filters.cat === c.id ? ' selected' : ''}>${escapeHTML(`${c.icone} ${c.nome}`)}</option>`).join('')}
+          ${d.categories.map((c) => `<option value="${escapeHTML(c.id)}"${filters.cat === c.id ? ' selected' : ''}>${escapeHTML(c.nome)}</option>`).join('')}
         </select>
       </label>
     </div>

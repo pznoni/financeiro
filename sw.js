@@ -1,6 +1,6 @@
 // sw.js — service worker: pré-cache de todos os arquivos e funcionamento offline.
 // A cada publicação, INCREMENTE CACHE_VERSION (e APP_VERSION em js/version.js).
-const CACHE_VERSION = 'financeiro-v2';
+const CACHE_VERSION = 'financeiro-v3';
 
 const ASSETS = [
   './',

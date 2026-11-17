@@ -8,8 +8,8 @@ import {
   monthShort, parseMoney, todayISO, uid,
 } from '../util.js';
 import {
-  $, colorPicker, confirmDialog, emptyState, icons, openSheet, originOptions, parseOrigin,
-  progressBar, safeColor, showError, toast, transactionRow,
+  $, confirmDialog, emptyState, icons, openSheet, originOptions, parseOrigin,
+  progressBar, showError, toast, transactionRow,
 } from './components.js';
 import { bindTransactionActions, openTransactionForm } from './form-lancamento.js';
 
@@ -42,7 +42,7 @@ function cardItem(card, d) {
   const inv = getInvoice(card, currentInvoiceMonth(card), d.transactions);
   return `
     <li>
-      <a class="credit-card" href="#cartoes/${encodeURIComponent(card.id)}/${inv.ym}" style="--c:${safeColor(card.cor)}">
+      <a class="credit-card" href="#cartoes/${encodeURIComponent(card.id)}/${inv.ym}">
         <div class="cc-top">
           <strong>${escapeHTML(card.nome)}</strong>
           <span class="badge badge-${inv.status}">${INVOICE_STATUS[inv.status]}</span>
@@ -83,7 +83,7 @@ async function renderInvoice(root, ctx, cardId, ymParam) {
       <a class="icon-btn" href="${base}/${addMonths(ym, 1)}" aria-label="Próxima fatura">${icons.right}</a>
     </div>
 
-    <section class="panel invoice" style="--c:${safeColor(card.cor)}">
+    <section class="panel invoice">
       <div class="invoice-total">
         <span class="badge badge-${inv.status}">${INVOICE_STATUS[inv.status]}</span>
         <strong>${formatBRL(inv.total)}</strong>
@@ -215,7 +215,6 @@ export function openCardForm(card, ctx) {
           <label class="field"><span>Dia de vencimento</span><select name="vencimento">${dayOptions(c.vencimento)}</select></label>
         </div>
         <p class="hint">Compras feitas depois do dia de fechamento entram na fatura seguinte.</p>
-        ${colorPicker('cor', c.cor)}
         <p class="form-error" role="alert" hidden></p>
         <div class="form-actions">
           ${card ? '<button type="button" class="btn btn-danger-ghost" data-delete>Excluir</button>' : ''}
@@ -239,7 +238,6 @@ export function openCardForm(card, ctx) {
       limite,
       fechamento: Number(form.fechamento.value),
       vencimento: Number(form.vencimento.value),
-      cor: form.cor.value,
     };
     try {
       await put('cards', saved);

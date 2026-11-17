@@ -228,15 +228,6 @@ export function bindMonthSwitcher(root) {
 
 // ---------- Peças de lista ----------
 
-const HEX = /^#[0-9a-f]{6}$/i;
-export const safeColor = (c, fallback = '#64748b') => (HEX.test(c || '') ? c : fallback);
-
-export function catIcon(cat, { emoji, color } = {}) {
-  const e = emoji || cat?.icone || '❔';
-  const c = safeColor(color || cat?.cor);
-  return `<span class="cat-icon" style="--c:${c}" aria-hidden="true">${escapeHTML(e)}</span>`;
-}
-
 export function emptyState(text, emoji = '🗂️') {
   return `<div class="empty"><span aria-hidden="true">${emoji}</span><p>${escapeHTML(text)}</p></div>`;
 }
@@ -271,7 +262,6 @@ export function transactionRow(t, d, { toggle = true, showDate = false } = {}) {
   return `
     <li class="tx${pending ? ' is-pending' : ''}">
       <button type="button" class="tx-main" data-action="edit" data-id="${escapeHTML(t.id)}">
-        ${pay ? catIcon(null, { emoji: '💳', color: '#64748b' }) : catIcon(cat)}
         <span class="tx-text">
           <span class="tx-desc">${escapeHTML(t.descricao || cat?.nome || 'Lançamento')}</span>
           <span class="tx-meta">${meta.map(escapeHTML).join(' · ')}</span>
@@ -288,7 +278,7 @@ export function transactionRow(t, d, { toggle = true, showDate = false } = {}) {
 
 export function categoryOptions(categories, tipo, selected) {
   const list = categories.filter((c) => c.tipo === tipo || c.id === selected);
-  return list.map((c) => `<option value="${escapeHTML(c.id)}"${c.id === selected ? ' selected' : ''}>${escapeHTML(`${c.icone} ${c.nome}`)}</option>`).join('');
+  return list.map((c) => `<option value="${escapeHTML(c.id)}"${c.id === selected ? ' selected' : ''}>${escapeHTML(c.nome)}</option>`).join('');
 }
 
 /** <option>s "acc:<id>" e "card:<id>". Cartões só aparecem se allowCards. */
@@ -305,23 +295,6 @@ export function parseOrigin(value) {
   const [kind, ...rest] = String(value || '').split(':');
   const id = rest.join(':');
   return { accountId: kind === 'acc' ? id : null, cardId: kind === 'card' ? id : null };
-}
-
-export const COLORS = ['#22c55e', '#14b8a6', '#06b6d4', '#3b82f6', '#6366f1', '#a855f7', '#ec4899', '#ef4444', '#f97316', '#eab308', '#94a3b8', '#64748b'];
-
-export function colorPicker(name, selected) {
-  const sel = COLORS.includes(selected) ? selected : COLORS[0];
-  return `
-    <fieldset class="field colors">
-      <legend>Cor</legend>
-      <div class="swatches">
-        ${COLORS.map((c) => `
-          <label class="swatch" style="--c:${c}">
-            <input type="radio" name="${name}" value="${c}"${c === sel ? ' checked' : ''}>
-            <span class="visually-hidden">${c}</span>
-          </label>`).join('')}
-      </div>
-    </fieldset>`;
 }
 
 /** Barra de progresso simples (0–100%). */

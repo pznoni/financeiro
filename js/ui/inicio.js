@@ -9,7 +9,7 @@ import {
   diffDays, dueLabel, endOfMonth, escapeHTML, formatBRL, formatDate, monthShort, sum, todayISO,
 } from '../util.js';
 import {
-  bindMonthSwitcher, catIcon, emptyState, icons, monthSwitcher, moneyClass, safeColor,
+  bindMonthSwitcher, emptyState, icons, monthSwitcher, moneyClass,
 } from './components.js';
 import { bindTransactionActions } from './form-lancamento.js';
 
@@ -98,7 +98,6 @@ function upcomingHTML(d) {
       return `
         <li class="bill${late ? ' late' : ''}">
           <a class="tx-main" href="#cartoes/${encodeURIComponent(inv.card.id)}/${inv.ym}">
-            ${catIcon(null, { emoji: '💳', color: safeColor(inv.card.cor) })}
             <span class="tx-text">
               <span class="tx-desc">Fatura ${escapeHTML(inv.card.nome)}</span>
               <span class="tx-meta">${escapeHTML(dueLabel(it.date))} · ${formatDate(it.date)}</span>
@@ -112,7 +111,6 @@ function upcomingHTML(d) {
     return `
       <li class="bill${late ? ' late' : ''}">
         <button type="button" class="tx-main" data-action="edit" data-id="${escapeHTML(t.id)}">
-          ${catIcon(cat)}
           <span class="tx-text">
             <span class="tx-desc">${escapeHTML(t.descricao)}</span>
             <span class="tx-meta">${escapeHTML(dueLabel(it.date))} · ${formatDate(it.date)}</span>
@@ -134,10 +132,10 @@ function categoryBars(monthTx, d) {
     return `
       <li>
         <div class="bar-head">
-          <span>${escapeHTML(cat ? `${cat.icone} ${cat.nome}` : 'Sem categoria')}</span>
+          <span>${escapeHTML(cat ? cat.nome : 'Sem categoria')}</span>
           <span><strong>${formatBRL(valor)}</strong> <small>${pct}%</small></span>
         </div>
-        <div class="bar-track"><span style="width:${((valor / max) * 100).toFixed(1)}%;--c:${safeColor(cat?.cor)}"></span></div>
+        <div class="bar-track"><span style="width:${((valor / max) * 100).toFixed(1)}%"></span></div>
       </li>`;
   }).join('')}</ul>`;
 }

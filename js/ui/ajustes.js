@@ -5,7 +5,7 @@ import { exportCSV, importBackupFile, lastBackupLabel, runBackup } from '../back
 import { APP_VERSION } from '../version.js';
 import { centsToInput, escapeHTML, formatBRL, parseMoney, todayISO, uid } from '../util.js';
 import {
-  $, catIcon, colorPicker, confirmDialog, icons, moneyClass, openSheet, showError, toast,
+  $, confirmDialog, icons, moneyClass, openSheet, showError, toast,
 } from './components.js';
 
 export async function render(root, ctx) {
@@ -30,7 +30,6 @@ export async function render(root, ctx) {
         const saldo = accountBalance(a, d.transactions, { until: today });
         return `
           <li><button type="button" class="settings-row" data-account="${escapeHTML(a.id)}">
-            ${catIcon(null, { emoji: '🏦', color: '#3b82f6' })}
             <span class="tx-text"><span class="tx-desc">${escapeHTML(a.nome)}</span>
               <span class="tx-meta">saldo inicial ${formatBRL(a.saldoInicial)}</span></span>
             <span class="tx-value ${moneyClass(saldo)}">${formatBRL(saldo)}</span>
@@ -100,7 +99,7 @@ export async function render(root, ctx) {
 }
 
 function catChip(c) {
-  return `<li><button type="button" class="cat-chip" data-category="${escapeHTML(c.id)}">${catIcon(c)}<span>${escapeHTML(c.nome)}</span></button></li>`;
+  return `<li><button type="button" class="cat-chip" data-category="${escapeHTML(c.id)}"><span>${escapeHTML(c.nome)}</span></button></li>`;
 }
 
 // ---------- Contas ----------
@@ -159,7 +158,7 @@ function openAccountForm(acc) {
 // ---------- Categorias ----------
 
 function openCategoryForm(cat) {
-  const c = cat || { nome: '', tipo: 'despesa', icone: '🏷️', cor: '#3b82f6' };
+  const c = cat || { nome: '', tipo: 'despesa' };
   const sheet = openSheet({
     title: cat ? 'Editar categoria' : 'Nova categoria',
     content: `
@@ -168,16 +167,9 @@ function openCategoryForm(cat) {
           <label><input type="radio" name="tipo" value="despesa"${c.tipo === 'despesa' ? ' checked' : ''}><span>Despesa</span></label>
           <label><input type="radio" name="tipo" value="receita"${c.tipo === 'receita' ? ' checked' : ''}><span>Receita</span></label>
         </div>
-        <div class="row2 row-emoji">
-          <label class="field"><span>Ícone</span>
-            <input name="icone" type="text" maxlength="8" value="${escapeHTML(c.icone)}" autocomplete="off" aria-describedby="emoji-hint">
-          </label>
-          <label class="field"><span>Nome</span>
-            <input name="nome" type="text" maxlength="30" placeholder="Ex.: Pets" value="${escapeHTML(c.nome)}" autocomplete="off">
-          </label>
-        </div>
-        <p class="hint" id="emoji-hint">No ícone, toque no 🌐 ou 😀 do teclado para escolher um emoji.</p>
-        ${colorPicker('cor', c.cor)}
+        <label class="field"><span>Nome</span>
+          <input name="nome" type="text" maxlength="30" placeholder="Ex.: Pets" value="${escapeHTML(c.nome)}" autocomplete="off">
+        </label>
         <p class="form-error" role="alert" hidden></p>
         <div class="form-actions">
           ${cat ? '<button type="button" class="btn btn-danger-ghost" data-delete>Excluir</button>' : ''}
@@ -194,7 +186,7 @@ function openCategoryForm(cat) {
     if (!nome) { err.textContent = 'Informe o nome da categoria.'; err.hidden = false; return; }
     try {
       await put('categories', {
-        ...c, id: cat?.id || uid(), nome, tipo: form.tipo.value, icone: form.icone.value.trim() || '🏷️', cor: form.cor.value,
+        ...c, id: cat?.id || uid(), nome, tipo: form.tipo.value,
       });
       toast(cat ? 'Categoria atualizada.' : 'Categoria criada.', { type: 'success' });
       sheet.close();

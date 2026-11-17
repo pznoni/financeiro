@@ -39,3 +39,11 @@ Ele usa o app como PWA na Tela de Início; precisa se sentir "do sistema", não 
 ## Verificação
 Rodar o teste automatizado no navegador headless (fluxos já usados) sem erros de console
 e conferir screenshots de cada tela antes de publicar.
+
+## Revisão 1 (pedido do dono: "mais neutro, mais fino, mais elegante, parece caro")
+- Paleta monocromática: preto `#1d1d1f`, cinzas `#6e6e73`/`#86868b`, fundo `#f5f5f7`. Azul e verde removidos.
+- Receita × despesa pelo sinal (+/−), não pela cor. Vermelho só para alerta (atraso, exclusão, erro).
+- Sem ícones/emojis nas listas; sem seletor de cor/emoji em categorias e cartões (dados antigos preservados, só ocultos).
+- Pesos mais leves (400/500; 600 nos títulos e saldos), traços de 1.5px, barras de 3–4px, separadores de 0.5px.
+- Cartão de crédito em branco titânio, proporção de cartão real. Botão principal preto.
+- Ícone do app em tons de grafite.
