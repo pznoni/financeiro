@@ -123,28 +123,48 @@ export function openSheet({ title, content = '', onClose } = {}) {
   return { el: sheet, body, close };
 }
 
-/** Arrastar a alça/cabeçalho para baixo fecha o painel (gesto comum no iOS). */
+/** Resistência progressiva além do limite (quanto mais longe, menos acompanha o dedo). */
+function rubberband(overshoot, dimension, constant = 0.55) {
+  return (overshoot * dimension * constant) / (dimension + constant * Math.abs(overshoot));
+}
+
+/**
+ * Arrastar a alça/cabeçalho move o painel 1:1 com o dedo. Fecha se passar de 120px
+ * ou se o gesto terminar com velocidade para baixo (puxão rápido), como no iOS.
+ * Para cima, o painel resiste em vez de travar.
+ */
 function enableDragToClose(sheet, close) {
   const handles = [$('.sheet-grab', sheet), $('.sheet-header', sheet)];
   let startY = null;
   let dy = 0;
+  let samples = [];
   const onStart = (ev) => {
     if (ev.target.closest('button')) return;
     startY = ev.touches[0].clientY;
     dy = 0;
+    samples = [{ y: startY, t: performance.now() }];
     sheet.style.transition = 'none';
   };
   const onMove = (ev) => {
     if (startY == null) return;
-    dy = Math.max(0, ev.touches[0].clientY - startY);
+    const y = ev.touches[0].clientY;
+    const raw = y - startY;
+    dy = raw >= 0 ? raw : rubberband(raw, sheet.offsetHeight || 600) * 0.25;
     sheet.style.transform = `translateY(${dy}px)`;
+    samples.push({ y, t: performance.now() });
+    if (samples.length > 5) samples.shift();
   };
   const onEnd = () => {
     if (startY == null) return;
     startY = null;
+    // Velocidade (px/ms) das últimas amostras; positiva = para baixo.
+    const first = samples[0];
+    const last = samples[samples.length - 1];
+    const velocity = last && last.t > first.t ? (last.y - first.y) / (last.t - first.t) : 0;
+    // A transição parte da posição atual (o transform inline), sem salto.
     sheet.style.transition = '';
     sheet.style.transform = '';
-    if (dy > 90) close();
+    if (dy > 120 || (velocity > 0.5 && dy > 10)) close();
   };
   handles.forEach((h) => {
     h.addEventListener('touchstart', onStart, { passive: true });
